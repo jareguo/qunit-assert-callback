@@ -1,0 +1,85 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Test qunit-assert-callback</title>
+
+    <link rel="stylesheet" href="qunit.css" media="screen">
+    <script src="qunit.js"></script>
+    <script src="qunit-assert-callback.js"></script>
+
+    <script>
+        module('SHOULD FAILED');
+        
+        test('test disable', function () {
+            var cb = callback();    // default is disable
+            cb(2, 1);
+        });
+        test('test callbackName', function () {
+            var cb = callback().setName('my call back');
+            cb();
+        });
+        test('test disabled message', function () {
+            var cb = callback().setName('my call back').setDisabledMessage('you can not call at the moment!');
+            cb();
+        });
+        test('test expect and once', function () {
+            var cb = callback().enable();
+            cb.expect(2);
+            cb.once('Should called this guy 1 time since last calling .once()');
+        });
+
+        QUnit.separator();
+        module('SHOULD PASSED');
+        
+        test('test enable', 0, function () {
+            var cb = callback().enable();
+            cb(2, 1);
+        });
+
+        test('test expect', function () {
+            var cb = callback().enable();
+            cb.expect(0);
+            cb.expect(0, 'should not called yet');
+            cb();
+            cb.expect(1);
+        });
+        
+        test('test once', function () {
+            var cb = callback().enable();
+            cb();
+            cb.once();
+            cb();
+            cb.once();
+            cb();
+            cb.once();
+        });
+
+        test('test called count', function () {
+            var cb = callback().enable();
+            strictEqual(cb.calledCount, 0);
+            cb(2, 1);
+            strictEqual(cb.calledCount, 1);
+            cb();
+            strictEqual(cb.calledCount, 2);
+            cb();
+        });
+
+        test('test callbackFunction', 3, function () {
+            var obj = {};
+            obj.cb = callback(function (arg1, arg2) {
+                strictEqual(this, obj);
+                strictEqual(arg1, 2);
+                strictEqual(arg2, 1);
+            }).enable();
+            obj.cb(2, 1);
+        });
+
+    </script>
+
+</head>
+<body>
+    <div id="qunit"></div>
+    <div id="qunit-fixture"></div>
+</body>
+</html>
