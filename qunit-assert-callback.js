@@ -25,7 +25,7 @@
  *     foo();   // No error this time ;)
  *     obj.onDown.once('onDown should be called once');   // Assertion succeeded! 
  *
- * @param {function} [callbackFunction_opt] - You can pass in a callback when the wrapper is called. (@see wrapper.callbackFunction)
+ * @param {function} [callbackFunction_opt] - the real callback you want to register (@see wrapper.callbackFunction)
  * @example Example usage of callbackFunction_opt
  *     obj.onUp = assert.callback().enable();
  *     obj.onDown = assert.callback( function(val) {
@@ -76,11 +76,11 @@ function callback(callbackFunction_opt) {
      *     obj.onDown.callbackFunction( function(val) {
      *         equal(this, obj,     'Can test this');
      *         equal(val,  520,     'Can test argument');
-     *         equal(obj.onUp.calledCount, 1, 'Can test call order');
+     *         equal(obj.onUp.calledCount, 1, 'onUp should be called before onDown!');
      *     });
-     *     obj.upAndDown = function() { obj.onUp(); obj.onDown('Jare') };
+     *     obj.upAndDown = function() { obj.onUp(); obj.onDown(520) };
      *     obj.upAndDown();
-     *     obj.onDown.expect(1);    // Okey!
+     *     obj.onDown.expect(1, 'onDown should be called once!');    // Okey!
      */
     wrapper.callbackFunction = function (callbackFunction) {
         callbackFunction_ = callbackFunction;
@@ -121,7 +121,7 @@ function callback(callbackFunction_opt) {
     };
 
     /**
-     * Expect the callback to be called any times you like
+     * Expect the callback to be called any times you wish
      *
      * @example
      *     obj.onDown = assert.callback().enable();
@@ -167,15 +167,4 @@ function callback(callbackFunction_opt) {
 
 QUnit.extend(QUnit.assert, {
     callback: callback
-});
-
-QUnit.extend(QUnit, {
-    separator: function () {
-        module('');
-        test('----------------------------------------------------------------------------------------------------------------------------', 0, function () {});
-    }
-});
-
-QUnit.extend(window, {
-    separator: QUnit.separator
 });

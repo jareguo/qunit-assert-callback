@@ -9,6 +9,20 @@
     <script src="qunit-assert-callback.js"></script>
 
     <script>
+        QUnit.extend(QUnit, {
+            separator: function () {
+                module('');
+                test('----------------------------------------------------------------------------------------------------------------------------', 0, function () {});
+            }
+        });
+
+        QUnit.extend(window, {
+            separator: QUnit.separator
+        });
+
+
+
+
         module('SHOULD FAILED');
         
         test('test disable', function () {
