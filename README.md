@@ -8,7 +8,7 @@ A QUnit assert plugin to test sync callback. You can easily assert that the call
 var obj;
 
 // Create and return a new callback wrapper for handling assertion.
-obj.callback = assert.callback(callbackFunction_opt);
+obj.callback = assert.Callback(callbackFunction_opt);
 
 // By default, the callback is not allowed to call unless you call its enable method first.
 // You can enable and disable repeatedly.
@@ -28,7 +28,7 @@ obj.callback.once(message_opt);
 ### Make Assertion failed if called
 
 ```js
-obj.onDown = assert.callback();          // disabled by default
+obj.onDown = assert.Callback();          // disabled by default
 var foo = function() { obj.onDown() };
 
 foo();    // Assertion failed! onDown should not be called in foo!
@@ -37,7 +37,7 @@ foo();    // Assertion failed! onDown should not be called in foo!
 ### Assert callback called
 
 ```js
-obj.onDown = assert.callback().enable(); // enabled this time ;)
+obj.onDown = assert.Callback().enable(); // enabled this time ;)
 var foo = function() { obj.onDown() };
 
 foo();   // No error this time ;)
@@ -47,7 +47,7 @@ obj.onDown.once('onDown should be called once');   // Assertion succeeded!
 ### Expect the callback to be called any times you wish
 
 ```js
-obj.onDown = assert.callback().enable();
+obj.onDown = assert.Callback().enable();
 vaf down = function() { obj.onDown() };
 
 down();
@@ -62,7 +62,7 @@ obj.onDown.expect(4);    // Okey!
 ### Disable the callback if you think it should not be called anymore.
 
 ```js
-obj.onDown = assert.callback().enable();
+obj.onDown = assert.Callback().enable();
 var foo = function() { obj.onDown() };
 
 foo();
@@ -80,9 +80,9 @@ foo();       // Assertion failed: onDown should not be called anymore
 
 ```js
 // callback 1
-obj.onUp = assert.callback().enable();
+obj.onUp = assert.Callback().enable();
 // callback 2
-obj.onDown = assert.callback( function(val) {
+obj.onDown = assert.Callback( function(val) {
     equal(this, obj,     'assert this');
     equal(val,  520,     'assert argument');
     equal(obj.onUp.calledCount, 1, 'onUp should be called before onDown!');

@@ -9,50 +9,46 @@
     <script src="qunit-assert-callback.js"></script>
 
     <script>
-        QUnit.extend(QUnit, {
-            separator: function () {
-                module('');
-                test('----------------------------------------------------------------------------------------------------------------------------', 0, function () {});
-            }
-        });
-
-        QUnit.extend(window, {
-            separator: QUnit.separator
-        });
+        QUnit.largeModule = function (name, testEnvironment) {
+            module();
+            test('------------------------------------------------------- ' + name + 
+                 ' -------------------------------------------------------', 0,
+                 function () {});
+            module(name, testEnvironment);
+        };
+        window.largeModule = QUnit.largeModule;
 
 
 
-
-        module('SHOULD FAILED');
+        largeModule('SHOULD FAILED');
         
         test('test disable', function () {
-            var cb = callback();    // default is disable
+            var cb = Callback();    // default is disable
             cb(2, 1);
         });
         test('test callbackName', function () {
-            var cb = callback().setName('my call back');
+            var cb = Callback().setName('my call back');
             cb();
         });
         test('test disabled message', function () {
-            var cb = callback().setName('my call back').setDisabledMessage('you can not call at the moment!');
+            var cb = Callback().setName('my call back').setDisabledMessage('you can not call at the moment!');
             cb();
         });
         test('test expect and once', function () {
-            var cb = callback().enable();
+            var cb = Callback().enable();
             cb.expect(2);
             cb.once('Should called this guy 1 time since last calling .once()');
         });
-
-        QUnit.separator();
-        module('SHOULD PASSED');
+        
+        largeModule('SHOULD PASSED');
         
         test('test enable', 0, function () {
-            var cb = callback().enable();
+            var cb = Callback().enable();
             cb(2, 1);
         });
 
         test('test expect', function () {
-            var cb = callback().enable();
+            var cb = Callback().enable();
             cb.expect(0);
             cb.expect(0, 'should not called yet');
             cb();
@@ -60,7 +56,7 @@
         });
         
         test('test once', function () {
-            var cb = callback().enable();
+            var cb = Callback().enable();
             cb();
             cb.once();
             cb();
@@ -70,7 +66,7 @@
         });
 
         test('test called count', function () {
-            var cb = callback().enable();
+            var cb = Callback().enable();
             strictEqual(cb.calledCount, 0);
             cb(2, 1);
             strictEqual(cb.calledCount, 1);
@@ -81,7 +77,7 @@
 
         test('test callbackFunction', 3, function () {
             var obj = {};
-            obj.cb = callback(function (arg1, arg2) {
+            obj.cb = Callback(function (arg1, arg2) {
                 strictEqual(this, obj);
                 strictEqual(arg1, 2);
                 strictEqual(arg2, 1);
